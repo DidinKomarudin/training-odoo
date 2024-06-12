@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <!-- Tree View -->
+  <record id="planning_role_training_view_tree" model="ir.ui.view">
+    <field name="name">planning.role.training.view_tree</field>
+    <field name="model">planning.role.training</field>
+    <field name="arch" type="xml">
+      <tree string="Planning Role">
+        <field name="active" column_invisible="1"/>
+        <field name="name"/>
+        <field name="color"/>
+        <field name="resource_ids" widget="many2many_avatar_resource" />
+        <field name="sequence"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="planning_role_training_view_form" model="ir.ui.view">
+    <field name="name">planning.role.training.view.form</field>
+    <field name="model">planning.role.training</field>
+    <field name="arch" type="xml">
+      <form string="Planning Role">
+        <sheet>
+          <widget name="web_ribbon" tittle="Archieved" bg_color="text_bg_danger" invisible="active"/>
+          <group>
+            <field name="active" invisible="1"/>
+            <field name="name" required="1"/>
+            <field name="resource_ids" widget="many2many_tags" context="{'show_job_tittle':True,'from_planning': True}" required="1"/>
+            <field name="point_rate" required="1"/>
+            <field name="amount" required="1"/>
+            <field name="color" />
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Kanban View -->
+  <record id="planning_role_view_kanban" model="ir.ui.view">
+    <field name="name">planning.role.view.kanban</field>
+    <field name="model">planning.role.training</field>
+    <field name="arch" type="xml">
+      <kanban class="o_kanban_dashboard">
+        <field name="color"/>
+        <templates>
+          <t t-name="kanban-menu">
+            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdwn-item">Edit</a>
+            <a t-if="widget.deleteable" role="menuitem" type="delete" class="dropdwn-item">Delete</a>
+            <ul class="oe_kanban_colorpicker" data-field="color" role="popup" />
+          </t>
+          <t t-name="kanban-box">
+            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+              <div class="o_kanban_card_header">
+                <div class="o_kanban_card_header_title">
+                  <div class="o_primary">
+                    <field name="name" />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col o_kanban_primary_left">
+                    <field name="resource_ids" widget="many2many_tags"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+  <!-- Search View -->
+  <record model="ir.ui.view" id="planning_role_training_search">
+    <field name="name">planning.role.training.search</field>
+    <field name="model">planning.role.training</field>
+    <field name="arch" type="xml">
+      <search string="Planning Role Search">
+        <field name="name"/>
+        <field name="resource_ids"/>
+        <filter name="my_department" string="My Department" domain="[('resource_ids.employee_id.member_of_department','=', True)]"/>
+        <separator/>
+        <filter name="inactive" string="Archived" domain="[('active','=', False)]"/>
+        <group string="Group By">
+          <filter name="group_by_resource" string="Resources" context="{'group_by':'resource_ids'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+
+  <record id="planning_role_training_action" model="ir.actions.act_window">
+    <field name="name">planning.role.training.action</field>
+    <field name="res_model">planning.role.training</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+    Click to start preparing a new prepaid revenue.    
+    This view can be used by accountants in order to collect information about prepaid revenues based on start date and end date. It then allows to generate the corresponding cutoff journal entry in one click.
+      </p>
+    </field>
+  </record>
+
+  <menuitem id="planning_role_menu" name="Planning Role" action="planning_role_training_action" parent="hr.menu_config_employee" sequence="30"/>
+
+</odoo>
