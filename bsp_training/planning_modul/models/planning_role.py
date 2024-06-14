@@ -21,8 +21,22 @@ class PlanningRoleTraining(models.Model):
                                     relation='planning_resource_ids',
                                     column1='planning_role_id',
                                     column2='resource_id',
-                                    string='Resource')
+                                    string='Resource',
+                                    domain="[('id','in', available_resources_ids)]")
     sequence = fields.Integer('Sequence')
+    available_resources_ids = fields.Many2many('resource.resource',string='Available resources',compute='_compute_resource_ids')
+    
+   
+    
+    @api.depends('active')
+    def _compute_resource_ids(self):
+        for rec in self:
+            resource_obj = self.env['resource.resource']
+            if rec.active:
+                uses_resources_ids = list(set(self.search([('active','=',True)]).mapped('resource_ids.id')))
+                rec.available_resources_ids = resource_obj.search([('id','in',uses_resources_ids)])
+            else:
+                rec.available_resources_ids = resource_obj.search([])    
     
     
     

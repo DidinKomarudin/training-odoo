@@ -9,8 +9,8 @@
         <field name="active" column_invisible="1"/>
         <field name="name"/>
         <field name="color"/>
-        <field name="resource_ids" widget="many2many_avatar_resource" />
-        <field name="sequence"/>
+        <field name="resource_ids" widget="many2many_tags" />
+        <field name="sequence" widget="handle"/>
       </tree>
     </field>
   </record>
@@ -22,8 +22,10 @@
       <form string="Planning Role">
         <sheet>
           <widget name="web_ribbon" tittle="Archieved" bg_color="text_bg_danger" invisible="active"/>
+
           <group>
             <field name="active" invisible="1"/>
+            <field name="available_resources_ids" invisible="1"/>            
             <field name="name" required="1"/>
             <field name="resource_ids" widget="many2many_tags" context="{'show_job_tittle':True,'from_planning': True}" required="1"/>
             <field name="point_rate" required="1"/>

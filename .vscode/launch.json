@@ -15,6 +15,8 @@
             "args": [
                 "--config=D:\\_work\\Projects\\odoo\\Training17\\training.conf",
                 "--dev=xml",
+                "--database=traning_odoo17",
+                "--update=planning_modul"
             ]
         }
     ]
